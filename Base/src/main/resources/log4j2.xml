@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+	<Properties>
+		<Property name="log-path">d:/tmp</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console-log" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n" />
+		</Console>
+		<RollingRandomAccessFile name="Rollingfamstacklogfile"
+                                 fileName="${log-path}/logs/famstack.log"
+                                 filePattern="${log-path}/logs/famstack.log.%d{yyyy-MM-dd-hh-mm}.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] %c{1} - %msg%n"/>
+            <Policies>
+               <TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+            </Policies>
+        </RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.chathan.*" level="all" additivity="false">
+			<appender-ref ref="Rollingfamstacklogfile" level="all" />
+			<appender-ref ref="console-log" level="all" />
+		</Logger>
+		<Root level="all" additivity="false">
+			<appender-ref ref="Rollingfamstacklogfile" level="all" />
+			<appender-ref ref="console-log" level="all" />
+		</Root>
+	</Loggers>
+</Configuration>
+

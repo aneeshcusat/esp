@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.famstack.com/xsd/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.famstack.com/xsd/" elementFormDefault="qualified">
+    <xsd:complexType name="UserProfile">
+    	<xsd:sequence>
+    		<xsd:element name="firstName" type="string"></xsd:element>
+    		<xsd:element name="middleName" type="string"></xsd:element>
+    		<xsd:element name="lastName" type="string"></xsd:element>
+    		<xsd:element name="loginName" type="string"></xsd:element>
+    		<xsd:element name="password" type="string"></xsd:element>
+    		<xsd:element name="loginState" type="string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

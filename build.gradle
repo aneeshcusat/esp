@@ -1,0 +1,183 @@
+// project version
+version = "$applicationVersion"
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'com.lv.dbdeploy'
+apply plugin: 'pmd'
+
+// JDK version source compatibility
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+// War file name
+war.baseName = "$warBaseName"
+
+// Web directory, this overrides the default value "webapp"
+project.webAppDirName = 'WebApp'
+
+
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+          url "https://plugins.gradle.org/m2/"
+        }
+	}
+
+	dependencies {
+		classpath 'com.bmuschko:gradle-tomcat-plugin:2.0'
+		classpath "gradle.plugin.com.lv.plugins:gradle-dbdeploy-plugin:1.2"
+		classpath files('Base/lib/ojdbc7.jar')
+	}
+}
+
+// dependencies to run on tomcat, are mandatory for tomcat plugin
+dependencies {
+	compile 'org.slf4j:slf4j-api:1.7.21'
+	
+	// Spring support
+	compile group: 'org.springframework', name: 'spring-aop', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-beans', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-context', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-core', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-expression', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-web', version: '4.2.6.RELEASE'
+	
+	//spring security
+	compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.1.0.RELEASE'
+	compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
+	compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.1.0.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.1.0.RELEASE'
+	
+	
+	//Hibernate support
+	compile group : 'org.springframework', name : 'spring-orm', version : '4.2.6.RELEASE'
+	compile group : 'javax.validation', name : 'validation-api', version : '1.1.0.Final'
+	compile group : 'org.hibernate', name : 'hibernate-core', version : '4.3.2.Final'
+	compile group : 'org.hibernate', name : 'hibernate-validator', version : '4.3.2.Final'
+	compile group : 'org.hibernate', name : 'hibernate-entitymanager', version : '4.3.2.Final'
+	compile group : 'org.hibernate.common', name : 'hibernate-commons-annotations', version : '4.0.4.Final'
+	compile group : 'org.hibernate.javax.persistence', name : 'hibernate-jpa-2.1-api', version : '1.0.0.Final'
+    
+	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.2'
+	
+	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+	
+	compile group: 'com.sun.jersey.contribs', name: 'jersey-spring', version: '1.19.1'
+	compile group: 'com.sun.jersey', name: 'jersey-core', version: '1.19.1'
+	compile group: 'com.sun.jersey', name: 'jersey-server', version: '1.19.1'
+	compile group: 'com.sun.jersey', name: 'jersey-json', version: '1.19.1'
+	
+    //Supports log4j2 logging
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6'
+  	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.6'
+	compile group: 'com.lmax', name: 'disruptor', version: '3.3.4'
+	
+	//to support advanced reflection
+	compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
+	compile group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
+	 
+	def tomcatVersion = '7.0.50'
+	
+	tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+			"org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+	
+	tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+		exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+	}
+	
+   testCompile group: 'junit', name: 'junit', version: '4.12'
+   testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.3'
+   testCompile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
+   compile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
+    
+    testRuntime(
+            'com.athaydes:spock-reports:1.2.7'
+    )
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven {
+		url "http://central.maven.org/maven2/"
+	}
+	jcenter()
+}
+
+task explodedWar(type: Copy) {
+	into "$buildDir/explodedWar"
+	with war
+}
+
+war.dependsOn explodedWar
+
+build.dependsOn update
+build.dependsOn pmdMain
+
+// Set source directory
+sourceSets {
+		main {
+			java {
+				srcDir 'Base/src/main/java'
+				srcDir 'Rest.Services/src/main/java'
+				srcDir 'Rest.Schema/src/main/java'
+			}
+			resources {
+				srcDir 'Base/src/main/resources'
+			}
+		}
+		test {
+    		groovy {
+      			srcDir 'Base/src/test/groovy'
+      			srcDir 'Rest.Services/src/test/groovy'
+   			}
+  		}
+  		
+	}
+
+// context where tomcat is deployed, by defautl localhost:8080/
+tomcatRun.contextPath = '/'
+tomcatRunWar.contextPath = '/'
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.4'
+}
+
+dbdeploy {
+        scriptdirectory = file('Base/src/sql')
+        driver = 'oracle.jdbc.driver.OracleDriver'
+        url = 'jdbc:oracle:thin:@localhost:1521:ATGCRS'
+        password = 'FAM_STACK'
+        userid = 'FAM_STACK'
+}
+
+task sourceSetProperties << {
+sourceSets {
+	main {
+		println "java.srcDirs = ${java.srcDirs}"
+		println "resources.srcDirs = ${resources.srcDirs}"
+		println "java.files = ${java.files.name}"
+		println "allJava.files = ${allJava.files.name}"
+		println "resources.files = ${resources.files.name}"
+		println "allSource.files = ${allSource.files.name}"
+		println "output.classesDir = ${output.classesDir}"
+		println "output.resourcesDir = ${output.resourcesDir}"
+		println "output.files = ${output.files}"
+		}
+	}
+}
+
+compileTestJava {
+	enabled = false
+}
+processTestResources {
+	enabled = false
+}
+pmdTest {
+	enabled = false
+}
