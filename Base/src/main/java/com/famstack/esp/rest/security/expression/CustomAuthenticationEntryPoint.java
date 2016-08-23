@@ -1,4 +1,4 @@
-package com.chathan.famstack.rest.security.expression;
+package com.famstack.esp.rest.security.expression;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 

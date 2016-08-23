@@ -1,4 +1,4 @@
-package com.chathan.famstack.rest.security.expression;
+package com.famstack.esp.rest.security.expression;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.chathan.famstack.rest.security.expression;
+package com.famstack.esp.rest.security.expression;
 
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;

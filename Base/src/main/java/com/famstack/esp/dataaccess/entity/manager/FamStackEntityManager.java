@@ -1,4 +1,4 @@
-package com.chathan.famstack.dataaccess.entity.manager;
+package com.famstack.esp.dataaccess.entity.manager;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,8 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.chathan.famstack.BaseFamStackService;
+import com.famstack.esp.BaseFamStackService;
+
 
 @Repository
 @Transactional

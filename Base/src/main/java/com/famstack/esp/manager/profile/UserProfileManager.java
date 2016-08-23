@@ -1,4 +1,4 @@
-package com.chathan.famstack.manager.profile;
+package com.famstack.esp.manager.profile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,21 +6,21 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.chathan.famstack.BaseFamStackService;
-import com.chathan.famstack.dataaccess.entity.UserEntity;
-import com.chathan.famstack.dataaccess.entity.manager.FamStackEntityManager;
-import com.chathan.famstack.rest.security.login.LoginResult;
 import com.chathan.xsd.profileservices.ObjectFactory;
 import com.chathan.xsd.profileservices.UserProfile;
+import com.famstack.esp.BaseFamStackService;
+import com.famstack.esp.dataaccess.entity.UserEntity;
+import com.famstack.esp.dataaccess.entity.manager.FamStackEntityManager;
+import com.famstack.esp.rest.security.login.LoginResult;
 
 public class UserProfileManager extends BaseFamStackService {
-	
+
 	@Autowired
 	ObjectFactory objectFactory;
-	
+
 	@Autowired
 	FamStackEntityManager<UserEntity> famStackEntityManager;
-	
+
 	public String registerUser() {
 		return "user registered";
 	}
@@ -37,7 +37,7 @@ public class UserProfileManager extends BaseFamStackService {
 	}
 
 	public UserProfile getUserDetails() {
-		
+
 		logDebug("Executing user profilermanager");
 		List<UserEntity> userEntity = famStackEntityManager.getAllItems(UserEntity.class);
 		UserProfile userProfile = objectFactory.createUserProfile();

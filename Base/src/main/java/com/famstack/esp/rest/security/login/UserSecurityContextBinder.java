@@ -1,4 +1,4 @@
-package com.chathan.famstack.rest.security.login;
+package com.famstack.esp.rest.security.login;
 
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON;
 
